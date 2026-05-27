@@ -72,6 +72,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used within AuthProvider');
+  if (!ctx) {
+    // Defensive fallback: instead of throwing, return a safe stub so the UI
+    // can render (typically it'll show a loading state) and we don't crash
+    // entirely if the provider isn't mounted for some reason.
+    // Also log a helpful warning to make debugging easier.
+    // eslint-disable-next-line no-console
+    console.warn('useAuth used outside AuthProvider — returning fallback stub. Ensure AuthProvider is mounted at the app root.');
+
+    const noopAsync = async () => {};
+    const stub = {
+      user: null,
+      loading: true,
+      loginEmail: noopAsync,
+      register: noopAsync,
+      sendOtp: noopAsync,
+      verifyOtp: noopAsync,
+      logout: () => {},
+    } as AuthContextValue;
+
+    return stub;
+  }
   return ctx;
 }

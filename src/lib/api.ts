@@ -111,9 +111,20 @@ async function request<T>(path: string, opts: RequestOptions = {}): Promise<T> {
       (json && 'message' in json && json.message) ||
       `Request failed (${res.status})`;
 
-    // If the server indicates the token is invalid or expired, clear stored
-    // auth and notify the app so it can reset UI and prompt for login.
-    if (res.status === 401) {
+    const lower = String(msg).toLowerCase();
+
+    // If the server indicates the token is invalid or expired (either via
+    // a 401 status or a textual message), clear stored auth and notify the
+    // app so it can reset UI and prompt for login.
+    const tokenIssue =
+      res.status === 401 ||
+      lower.includes('invalid or expired') ||
+      lower.includes('invalid token') ||
+      lower.includes('expired token') ||
+      lower.includes('token expired') ||
+      lower.includes('session expired');
+
+    if (tokenIssue) {
       try {
         clearToken();
         if (typeof globalThis !== 'undefined' && typeof globalThis.dispatchEvent === 'function') {
