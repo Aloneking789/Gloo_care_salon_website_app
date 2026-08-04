@@ -64,23 +64,74 @@ export interface BarberData {
   id: string;
   salonId: string;
   name: string;
-  phone?: string;
-  email?: string;
-  specialization?: string;
+  specialty: string[];
+  experience: string;
+  imageUrl?: string;
+  mobileNo: string;
   isActive?: boolean;
+}
+
+export interface CreateBarberRequest {
+  name: string;
+  specialty: string[];
+  experience: string;
+  image?: string;
+  mobileNo: string;
+}
+
+export interface BookingUser {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  avatarUrl: string | null;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BookingService {
+  id: string;
+  bookingId: string;
+  serviceId: string;
+  stylistId: string | null;
+  service: {
+    id: string;
+    salonId: string;
+    name: string;
+    duration: number;
+    price: number;
+    category: string;
+  };
 }
 
 export interface BookingData {
   id: string;
+  userId: string;
+  type: string;
   salonId: string;
-  customerName?: string;
-  customerPhone?: string;
-  serviceName?: string;
-  barberName?: string;
+  homeServiceId: string | null;
+  barberId: string | null;
   date: string;
-  time?: string;
-  status: string;
-  amount?: number;
+  time: string;
+  status: 'PENDING' | 'CONFIRMED' | 'STARTED' | 'COMPLETED' | 'CANCELLED' | 'REJECTED';
+  notes: string | null;
+  addressStreet: string | null;
+  addressCity: string | null;
+  addressState: string | null;
+  addressZip: string | null;
+  addressInstructions: string | null;
+  confirmationCode: string;
+  totalPrice: number;
+  estimatedDuration: number;
+  serviceStartedAt: string | null;
+  expectedCompletion: string | null;
+  createdAt: string;
+  updatedAt: string;
+  user: BookingUser;
+  barber: BarberData | null;
+  services: BookingService[];
+  queueToken: string | null;
 }
 
 export interface SalonWalletTransaction {

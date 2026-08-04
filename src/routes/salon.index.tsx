@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
 import { PageHeader } from '@/components/PageHeader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,7 +12,8 @@ import {
   Clock, 
   CheckCircle2, 
   CalendarDays, 
-  TrendingUp 
+  TrendingUp,
+  X
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import type { PeriodTotal } from '@/lib/types';
@@ -22,6 +24,15 @@ export const Route = createFileRoute('/salon/')({
 
 function DashboardPage() {
   const { user } = useAuth();
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedImage(null);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
   
   const { data, isLoading, error } = useQuery({
     queryKey: ['dashboard'],
@@ -171,8 +182,9 @@ function DashboardPage() {
                   <img 
                     src={src} 
                     alt={`Salon gallery item ${i + 1}`} 
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" 
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 cursor-pointer" 
                     loading="lazy"
+                    onClick={() => setSelectedImage(src)}
                   />
                 </div>
               ))}
@@ -180,6 +192,28 @@ function DashboardPage() {
           )}
         </CardContent>
       </Card>
+
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-xs p-4 sm:p-6"
+          onClick={() => setSelectedImage(null)}
+        >
+          <button
+            type="button"
+            className="absolute top-4 right-4 text-white hover:text-primary transition-colors bg-white/10 hover:bg-white/20 p-2 rounded-full cursor-pointer z-50"
+            onClick={() => setSelectedImage(null)}
+            aria-label="Close full view"
+          >
+            <X className="h-5 w-5" />
+          </button>
+          <img 
+            src={selectedImage} 
+            alt="Salon gallery item full view" 
+            className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl transition-transform duration-300 animate-zoom-in"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 }

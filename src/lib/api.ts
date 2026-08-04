@@ -11,6 +11,7 @@ import type {
   AuthUser,
   LoginRequest,
   RegisterRequest,
+  CreateBarberRequest,
 } from './types';
 
 export const API_BASE = 'http://localhost:3021/api/v1';
@@ -180,6 +181,11 @@ export const api = {
     }
     return request<SalonProfileData>('/salon/profile/', { method: 'PUT', formData: fd });
   },
+  deleteProfileImage: (imageUrl: string) =>
+    request<{ message?: string }>('/salon/profile/image', {
+      method: 'DELETE',
+      body: { imageUrl },
+    }),
 
   // Services
   services: () => request<ServiceData[]>('/salon/services'),
@@ -192,9 +198,9 @@ export const api = {
 
   // Barbers / staff
   barbers: () => request<BarberData[]>('/salon/barbers'),
-  createBarber: (body: Partial<BarberData>) =>
+  createBarber: (body: CreateBarberRequest) =>
     request<BarberData>('/salon/barbers', { method: 'POST', body }),
-  updateBarber: (id: string, body: Partial<BarberData>) =>
+  updateBarber: (id: string, body: CreateBarberRequest) =>
     request<BarberData>(`/salon/barbers/${id}`, { method: 'PUT', body }),
   deleteBarber: (id: string) =>
     request<unknown>(`/salon/barbers/${id}`, { method: 'DELETE' }),
@@ -202,6 +208,16 @@ export const api = {
   // Bookings
   bookings: (query?: { status?: string; date?: string }) =>
     request<BookingData[]>('/salon/bookings', { query }),
+  startBooking: (id: string) =>
+    request<BookingData>(`/salon/bookings/${id}/start`, { method: 'PUT', body: { blocks: [] } }),
+  confirmBooking: (id: string) =>
+    request<BookingData>(`/salon/bookings/${id}/confirm`, { method: 'PUT' }),
+  rejectBooking: (id: string) =>
+    request<BookingData>(`/salon/bookings/${id}/reject`, { method: 'PUT' }),
+  cancelBooking: (id: string) =>
+    request<BookingData>(`/salon/bookings/${id}/cancel`, { method: 'PUT' }),
+  completeBooking: (id: string) =>
+    request<{ booking: BookingData }>(`/salon/bookings/${id}/complete`, { method: 'PUT' }),
 
   // Dashboard
   dashboard: () => request<DashboardOverviewData>('/salon/dashboard/overview'),
