@@ -18,6 +18,7 @@ import { Route as SalonWalletRouteImport } from './routes/salon.wallet'
 import { Route as SalonStaffRouteImport } from './routes/salon.staff'
 import { Route as SalonSettingsRouteImport } from './routes/salon.settings'
 import { Route as SalonServicesRouteImport } from './routes/salon.services'
+import { Route as SalonQueueRouteImport } from './routes/salon.queue'
 import { Route as SalonProfileRouteImport } from './routes/salon.profile'
 import { Route as SalonPrivacyPolicyRouteImport } from './routes/salon.privacy-policy'
 import { Route as SalonHelpSupportRouteImport } from './routes/salon.help-support'
@@ -69,6 +70,11 @@ const SalonServicesRoute = SalonServicesRouteImport.update({
   path: '/services',
   getParentRoute: () => SalonRoute,
 } as any)
+const SalonQueueRoute = SalonQueueRouteImport.update({
+  id: '/queue',
+  path: '/queue',
+  getParentRoute: () => SalonRoute,
+} as any)
 const SalonProfileRoute = SalonProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/salon/help-support': typeof SalonHelpSupportRoute
   '/salon/privacy-policy': typeof SalonPrivacyPolicyRoute
   '/salon/profile': typeof SalonProfileRoute
+  '/salon/queue': typeof SalonQueueRoute
   '/salon/services': typeof SalonServicesRoute
   '/salon/settings': typeof SalonSettingsRoute
   '/salon/staff': typeof SalonStaffRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByTo {
   '/salon/help-support': typeof SalonHelpSupportRoute
   '/salon/privacy-policy': typeof SalonPrivacyPolicyRoute
   '/salon/profile': typeof SalonProfileRoute
+  '/salon/queue': typeof SalonQueueRoute
   '/salon/services': typeof SalonServicesRoute
   '/salon/settings': typeof SalonSettingsRoute
   '/salon/staff': typeof SalonStaffRoute
@@ -137,6 +145,7 @@ export interface FileRoutesById {
   '/salon/help-support': typeof SalonHelpSupportRoute
   '/salon/privacy-policy': typeof SalonPrivacyPolicyRoute
   '/salon/profile': typeof SalonProfileRoute
+  '/salon/queue': typeof SalonQueueRoute
   '/salon/services': typeof SalonServicesRoute
   '/salon/settings': typeof SalonSettingsRoute
   '/salon/staff': typeof SalonStaffRoute
@@ -155,6 +164,7 @@ export interface FileRouteTypes {
     | '/salon/help-support'
     | '/salon/privacy-policy'
     | '/salon/profile'
+    | '/salon/queue'
     | '/salon/services'
     | '/salon/settings'
     | '/salon/staff'
@@ -170,6 +180,7 @@ export interface FileRouteTypes {
     | '/salon/help-support'
     | '/salon/privacy-policy'
     | '/salon/profile'
+    | '/salon/queue'
     | '/salon/services'
     | '/salon/settings'
     | '/salon/staff'
@@ -186,6 +197,7 @@ export interface FileRouteTypes {
     | '/salon/help-support'
     | '/salon/privacy-policy'
     | '/salon/profile'
+    | '/salon/queue'
     | '/salon/services'
     | '/salon/settings'
     | '/salon/staff'
@@ -265,6 +277,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SalonServicesRouteImport
       parentRoute: typeof SalonRoute
     }
+    '/salon/queue': {
+      id: '/salon/queue'
+      path: '/queue'
+      fullPath: '/salon/queue'
+      preLoaderRoute: typeof SalonQueueRouteImport
+      parentRoute: typeof SalonRoute
+    }
     '/salon/profile': {
       id: '/salon/profile'
       path: '/profile'
@@ -309,6 +328,7 @@ interface SalonRouteChildren {
   SalonHelpSupportRoute: typeof SalonHelpSupportRoute
   SalonPrivacyPolicyRoute: typeof SalonPrivacyPolicyRoute
   SalonProfileRoute: typeof SalonProfileRoute
+  SalonQueueRoute: typeof SalonQueueRoute
   SalonServicesRoute: typeof SalonServicesRoute
   SalonSettingsRoute: typeof SalonSettingsRoute
   SalonStaffRoute: typeof SalonStaffRoute
@@ -322,6 +342,7 @@ const SalonRouteChildren: SalonRouteChildren = {
   SalonHelpSupportRoute: SalonHelpSupportRoute,
   SalonPrivacyPolicyRoute: SalonPrivacyPolicyRoute,
   SalonProfileRoute: SalonProfileRoute,
+  SalonQueueRoute: SalonQueueRoute,
   SalonServicesRoute: SalonServicesRoute,
   SalonSettingsRoute: SalonSettingsRoute,
   SalonStaffRoute: SalonStaffRoute,

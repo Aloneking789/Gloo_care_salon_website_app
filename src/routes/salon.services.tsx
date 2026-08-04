@@ -214,9 +214,11 @@ function ServicesPage() {
       <PageHeader
         title="Services"
         description="Manage the services your salon offers"
+        layout="side-by-side"
         actions={
-          <Button onClick={openCreate}>
-            <Plus className="mr-2 h-4 w-4" /> Add service
+          <Button onClick={openCreate} className="gap-1 px-2.5 sm:px-4 text-xs sm:text-sm h-8 sm:h-9">
+            <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> 
+            <span className="text-xs sm:text-sm">Add service</span>
           </Button>
         }
       />

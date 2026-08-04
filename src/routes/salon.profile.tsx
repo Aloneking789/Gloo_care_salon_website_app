@@ -259,6 +259,7 @@ function ProfilePage() {
       <PageHeader 
         title="Profile" 
         description="Your salon details" 
+        layout="side-by-side"
         actions={
           !isEditing && data && (
             <Button onClick={() => setIsEditing(true)} className="gap-2 cursor-pointer">

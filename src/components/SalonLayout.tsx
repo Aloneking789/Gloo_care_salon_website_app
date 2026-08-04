@@ -13,6 +13,7 @@ import {
   Shield,
   LogOut,
   Menu,
+  ListOrdered,
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
@@ -24,6 +25,7 @@ const nav: Array<{ to: string; label: string; icon: typeof LayoutDashboard; exac
   { to: '/salon/gallery', label: 'Gallery', icon: ImageIcon },
   { to: '/salon/staff', label: 'Staff', icon: Users },
   { to: '/salon/bookings', label: 'Bookings', icon: Calendar },
+  { to: '/salon/queue', label: 'Queue', icon: ListOrdered },
   { to: '/salon/profile', label: 'Profile', icon: User },
   { to: '/salon/wallet', label: 'Wallet', icon: Wallet },
   { to: '/salon/help-support', label: 'Help & Support', icon: HelpCircle },
@@ -65,6 +67,7 @@ const getSectionName = (pathname: string, salonName: string) => {
   if (pathname.startsWith('/salon/gallery')) return 'Gallery';
   if (pathname.startsWith('/salon/staff')) return 'Staff';
   if (pathname.startsWith('/salon/bookings')) return 'Bookings';
+  if (pathname.startsWith('/salon/queue')) return 'Queue';
   if (pathname.startsWith('/salon/profile')) return 'Profile';
   if (pathname.startsWith('/salon/wallet')) return 'Wallet';
   if (pathname.startsWith('/salon/help-support')) return 'Help & Support';

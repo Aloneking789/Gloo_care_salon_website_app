@@ -190,3 +190,26 @@ export interface RegisterRequest {
   phone: string;
   referralCode?: string;
 }
+
+export interface QueueMemberData {
+  token: number;
+  position: number;
+  estimatedTime: number;
+  user: {
+    name: string;
+    phone: string;
+    email: string;
+  } | null;
+  services: {
+    id: string;
+    name: string;
+    duration: number;
+    price: number;
+  }[];
+}
+
+export interface AddToQueueResponse {
+  token: number;
+  position: number;
+  estimatedTime: number;
+}

@@ -188,16 +188,17 @@ function BookingsPage() {
       <PageHeader
         title="Bookings"
         description={`${bookings.length} total appointments`}
+        layout="side-by-side"
         actions={
           <Button 
             variant="outline" 
             size="sm" 
             onClick={() => refetch()} 
             disabled={isLoading || isRefetching}
-            className="gap-2"
+            className="gap-1 sm:gap-2 px-2 sm:px-3 text-xs sm:text-sm h-8 sm:h-9"
           >
-            <RefreshCw className={`h-4 w-4 ${isRefetching ? 'animate-spin' : ''}`} />
-            Refresh
+            <RefreshCw className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${isRefetching ? 'animate-spin' : ''}`} />
+            <span className="hidden sm:inline">Refresh</span>
           </Button>
         }
       />

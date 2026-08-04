@@ -12,6 +12,8 @@ import type {
   LoginRequest,
   RegisterRequest,
   CreateBarberRequest,
+  QueueMemberData,
+  AddToQueueResponse,
 } from './types';
 
 export const API_BASE = 'http://localhost:3021/api/v1';
@@ -223,4 +225,11 @@ export const api = {
 
   // Dashboard
   dashboard: () => request<DashboardOverviewData>('/salon/dashboard/overview'),
+
+  // Queue
+  getQueue: () => request<QueueMemberData[]>('/salon/queue'),
+  addToQueue: (serviceId: string) =>
+    request<AddToQueueResponse>('/salon/queue', { method: 'POST', body: { serviceId } }),
+  completeQueue: (queueToken: number) =>
+    request<{ success: boolean; message: string }>(`/salon/queue/token/${queueToken}/complete`, { method: 'PUT' }),
 };
