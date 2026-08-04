@@ -13,7 +13,7 @@ import type {
   RegisterRequest,
 } from './types';
 
-export const API_BASE = 'https://apigcare.vercel.app/api/v1';
+export const API_BASE = 'http://localhost:3021/api/v1';
 const TOKEN_KEY = 'gloocare_token';
 const USER_KEY = 'gloocare_user';
 

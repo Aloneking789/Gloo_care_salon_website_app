@@ -98,20 +98,25 @@ export interface WalletData {
   transactions: SalonWalletTransaction[];
 }
 
+export interface PeriodTotal {
+  amount: number;
+  commissionAmount: number;
+  inHand: number;
+}
+
 export interface DashboardOverviewData {
+  commissionPercentage?: number;
   totals?: {
-    revenue?: number;
-    bookings?: number;
-    customers?: number;
-    services?: number;
+    allTime?: PeriodTotal;
+    today?: PeriodTotal;
+    weekly?: PeriodTotal;
+    monthly?: PeriodTotal;
   };
   bookings?: {
-    today?: number;
-    pending?: number;
     completed?: number;
-    cancelled?: number;
+    upcoming?: number;
+    today?: number;
   };
-  commissionPercentage?: number;
 }
 
 export interface AuthUser {

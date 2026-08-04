@@ -17,8 +17,142 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+
+export interface ServiceCategoryOption {
+  id: string;
+  name: string;
+  img: string;
+}
+
+export const womenCategories: ServiceCategoryOption[] = [
+  {
+    id: "hair-styling",
+    name: "Hair Styling",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Woman_getting_hair_blowout_202607011434_y9zbh5.jpg",
+  },
+  {
+    id: "hair-color",
+    name: "Hair Color",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Create_a_premium_ultra-realistic_square_202607011433_fchjer.jpg",
+  },
+  {
+    id: "hair-treatment",
+    name: "Hair Treatment",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Woman_receiving_hair_spa_treatment_202607011434_p6lwy1.jpg",
+  },
+  {
+    id: "spa-massage",
+    name: "Spa & Massage",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Therapist_performing_back_massag__202607011434_eogjma.jpg",
+  },
+  {
+    id: "mani-pedi",
+    name: "Mani Pedi",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Beautician_treating_Indian_woman__202607011433_r9zlyi.jpg",
+  },
+  {
+    id: "skin-care",
+    name: "Skin Care",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Beautician_applying_cream_to_woman_202607011434_rsfwp6.jpg",
+  },
+  {
+    id: "makeup",
+    name: "Makeup",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Makeup_artist_applying_lipstick___202607011433_gatmka.jpg",
+  },
+  {
+    id: "bridal-package",
+    name: "Bridal Package",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Jul_1_2026_02_40_37_PM_1_oinzvf.png",
+  },
+  {
+    id: "nail-art",
+    name: "Nail Art",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Nail_artist_creating_nail_art_202607011434_nldehk.jpg",
+  },
+  {
+    id: "waxing",
+    name: "Waxing",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Beautician_waxing_arm_of_woman_202607011434_bajbau.jpg",
+  },
+  {
+    id: "mehndi",
+    name: "Mehndi",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Mehendi_artist_applying_patterns_202607011434_aw3dhc.jpg",
+  },
+];
+
+export const menCategories: ServiceCategoryOption[] = [
+  {
+    id: "haircut",
+    name: "Haircut & Styling",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Hairstylist_trimming_Indian_man__202607011433_pzn2g9.jpg",
+  },
+  {
+    id: "hair-color",
+    name: "Hair Color",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Man_receiving_hair_treatment_202607011434_xhyu4y.jpg",
+  },
+  {
+    id: "hair-treatment",
+    name: "Hair Treatment",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Beautician_performing_head_massage_202607011434_fj02wu.jpg",
+  },
+  {
+    id: "spa-massage",
+    name: "Spa & Massage",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Man_relaxing_on_spa_bed_202607011501_ppauth.jpg",
+  },
+  {
+    id: "mani-pedi",
+    name: "Mani Pedi",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Man_receiving_manicure_service_202607011434_zazlbu.jpg",
+  },
+  {
+    id: "skin-care",
+    name: "Skin Care",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Man_receiving_luxury_facial_202607011434_pqu9kd.jpg",
+  },
+  {
+    id: "makeup",
+    name: "Makeup",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Man_receiving_makeup_application_202607011434_xpvkbd.jpg",
+  },
+  {
+    id: "pre-groom",
+    name: "Pre Groom",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Groom_receiving_facial_treatment_202607011459_bvhojt.jpg",
+  },
+  {
+    id: "beard-care",
+    name: "Beard Care",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Barber_grooming_Indian_man_s_beard_202607011433_rfcmlr.jpg",
+  },
+  {
+    id: "waxing",
+    name: "Waxing",
+    img: "https://res.cloudinary.com/dhq7wpnai/image/upload/c_scale,w_800/Man_receiving_back_waxing_202607011505_m6phn7.jpg",
+  },
+];
+
+const allCategories = [...womenCategories, ...menCategories];
+export const distinctCategories = allCategories.filter(
+  (cat, index, self) => self.findIndex((c) => c.id === cat.id) === index
+);
+
+export const getCategoryName = (id: string) => {
+  const cat = distinctCategories.find((c) => c.id === id);
+  return cat ? cat.name : id;
+};
 
 export const Route = createFileRoute('/salon/services')({
   component: ServicesPage,
@@ -107,7 +241,7 @@ function ServicesPage() {
                 <div className="min-w-0">
                   <div className="truncate font-semibold">{s.name}</div>
                   <div className="text-sm text-muted-foreground">
-                    {s.category} · {s.duration} min
+                    {getCategoryName(s.category)} · {s.duration} min
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -115,14 +249,14 @@ function ServicesPage() {
                   <Button variant="ghost" size="icon" onClick={() => openEdit(s)} aria-label="Edit">
                     <Pencil className="h-4 w-4" />
                   </Button>
-                  <Button
+                  {/* <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => { if (confirm('Delete this service?')) remove.mutate(s.id); }}
                     aria-label="Delete"
                   >
                     <Trash2 className="h-4 w-4 text-destructive" />
-                  </Button>
+                  </Button> */}
                 </div>
               </CardContent>
             </Card>
@@ -141,9 +275,23 @@ function ServicesPage() {
               <Label htmlFor="name">Name</Label>
               <Input id="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 flex flex-col">
               <Label htmlFor="category">Category</Label>
-              <Input id="category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
+              <Select
+                value={form.category}
+                onValueChange={(val) => setForm({ ...form, category: val })}
+              >
+                <SelectTrigger id="category" className="w-full">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {distinctCategories.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
