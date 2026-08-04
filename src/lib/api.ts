@@ -62,9 +62,11 @@ interface RequestOptions {
 
 export class ApiClientError extends Error {
   status: number;
-  constructor(message: string, status: number) {
+  errors?: Record<string, string[]>;
+  constructor(message: string, status: number, errors?: Record<string, string[]>) {
     super(message);
     this.status = status;
+    this.errors = errors;
   }
 }
 
@@ -139,7 +141,8 @@ async function request<T>(path: string, opts: RequestOptions = {}): Promise<T> {
       throw new ApiClientError('Session expired. Please sign in again.', 401);
     }
 
-    throw new ApiClientError(msg, res.status);
+    const errors = (json && 'errors' in json) ? (json.errors as Record<string, string[]>) : undefined;
+    throw new ApiClientError(msg, res.status, errors);
   }
 
   if (json && 'data' in json) return (json as ApiResponse<T>).data;
