@@ -166,6 +166,8 @@ export const api = {
 
   // Wallet
   wallet: () => request<WalletData>('/salon/wallet'),
+  requestWithdrawal: (body: { amount: number; upiid: string }) =>
+    request<{ success: boolean; message?: string }>('/salon/wallet/withdraw', { method: 'POST', body }),
 
   // Profile
   profile: () => request<SalonProfileData>('/salon/profile/'),

@@ -26,7 +26,6 @@ const nav: Array<{ to: string; label: string; icon: typeof LayoutDashboard; exac
   { to: '/salon/bookings', label: 'Bookings', icon: Calendar },
   { to: '/salon/profile', label: 'Profile', icon: User },
   { to: '/salon/wallet', label: 'Wallet', icon: Wallet },
-  { to: '/salon/settings', label: 'Settings', icon: Settings },
   { to: '/salon/help-support', label: 'Help & Support', icon: HelpCircle },
   { to: '/salon/privacy-policy', label: 'Privacy', icon: Shield },
 ];
