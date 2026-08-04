@@ -13,7 +13,8 @@ import {
   CheckCircle2, 
   CalendarDays, 
   TrendingUp,
-  X
+  X,
+  RefreshCw
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import type { PeriodTotal } from '@/lib/types';
@@ -34,15 +35,24 @@ function DashboardPage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
   
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch: refetchDashboard, isFetching: isRefetchingDashboard } = useQuery({
     queryKey: ['dashboard'],
     queryFn: api.dashboard,
   });
 
-  const { data: profile, isLoading: isProfileLoading } = useQuery({
+  const { data: profile, isLoading: isProfileLoading, refetch: refetchProfile, isFetching: isRefetchingProfile } = useQuery({
     queryKey: ['profile'],
     queryFn: api.profile,
   });
+
+  const isRefetching = isRefetchingDashboard || isRefetchingProfile;
+
+  const handleRefresh = async () => {
+    await Promise.all([
+      refetchDashboard(),
+      refetchProfile(),
+    ]);
+  };
 
   const hasImages = profile?.images && profile.images.length > 0;
 
@@ -51,6 +61,18 @@ function DashboardPage() {
       <PageHeader
         title={`Welcome, ${user?.ownerName ?? ''}`}
         description={user?.salonName}
+        actions={
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleRefresh}
+            disabled={isRefetching}
+            className="cursor-pointer gap-2"
+          >
+            <RefreshCw className={`h-4 w-4 ${isRefetching ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
+        }
       />
 
       {error && (
