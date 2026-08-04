@@ -63,7 +63,7 @@ function QueuePage() {
   const completeServiceMutation = useMutation({
     mutationFn: (queueToken: number) => api.completeQueue(queueToken),
     onSuccess: (res) => {
-      toast.success(res.message || 'Service completed successfully.');
+      toast.success((res as any)?.message || 'Service completed and queue updated');
       qc.invalidateQueries({ queryKey: ['queue'] });
     },
     onError: (err: Error) => {
