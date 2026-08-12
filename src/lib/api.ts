@@ -16,7 +16,18 @@ import type {
   AddToQueueResponse,
 } from './types';
 
-export const API_BASE = 'http://localhost:3021/api/v1';
+// Prefer a runtime-provided API_BASE (set in Vercel env vars). On the server
+// fallback to localhost for local development; in the browser use a same-origin
+// relative path so the app can call the deployed host.
+export const API_BASE =
+  (typeof process !== 'undefined' && (process.env as any)?.API_BASE) ||
+  (typeof window === 'undefined' ? 'http://localhost:3021/api/v1' : '/api/v1');
+
+// Timeout for outbound API requests (ms). Can be tuned via env var
+const DEFAULT_FETCH_TIMEOUT_MS =
+  (typeof process !== 'undefined' && (process.env as any)?.FETCH_TIMEOUT_MS
+    ? parseInt((process.env as any).FETCH_TIMEOUT_MS, 10)
+    : 5000);
 const TOKEN_KEY = 'gloocare_token';
 const USER_KEY = 'gloocare_user';
 
@@ -99,8 +110,20 @@ async function request<T>(path: string, opts: RequestOptions = {}): Promise<T> {
 
   let res: Response;
   try {
-    res = await fetch(url, { method, headers, body: payload });
-  } catch (e) {
+    const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const signal = controller ? controller.signal : undefined;
+
+    const timeout = controller
+      ? setTimeout(() => controller.abort(), DEFAULT_FETCH_TIMEOUT_MS)
+      : undefined;
+
+    res = await fetch(url, { method, headers, body: payload, signal } as any);
+
+    if (timeout) clearTimeout(timeout as any);
+  } catch (e: any) {
+    if (e && e.name === 'AbortError') {
+      throw new ApiClientError('Request timed out.', 0);
+    }
     throw new ApiClientError('Network error. Please check your connection.', 0);
   }
 
