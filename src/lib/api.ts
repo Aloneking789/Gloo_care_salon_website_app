@@ -16,12 +16,13 @@ import type {
   AddToQueueResponse,
 } from './types';
 
-// Prefer a runtime-provided API_BASE (set in Vercel env vars). On the server
-// fallback to localhost for local development; in the browser use a same-origin
-// relative path so the app can call the deployed host.
+// API base: prefer an explicit env var `API_BASE`. If unset, default to the
+// canonical production API host so all requests go to https://api.gloocare.com.
+// - In development you can set `API_BASE` to http://localhost:3021/api/v1
+// - In production we default to https://api.gloocare.com/api/v1
 export const API_BASE =
   (typeof process !== 'undefined' && (process.env as any)?.API_BASE) ||
-  (typeof window === 'undefined' ? 'http://localhost:3021/api/v1' : '/api/v1');
+  'https://api.gloocare.com/api/v1';
 
 // Timeout for outbound API requests (ms). Can be tuned via env var
 const DEFAULT_FETCH_TIMEOUT_MS =
