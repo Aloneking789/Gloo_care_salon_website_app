@@ -1,5 +1,3 @@
-export const config = { runtime: 'edge' };
-
 async function getServerEntry() {
   // Dynamically import the SSR server entry provided by TanStack React Start
   const mod = await import('@tanstack/react-start/server-entry');
