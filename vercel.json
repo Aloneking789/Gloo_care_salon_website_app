@@ -2,7 +2,13 @@
   "version": 2,
   "builds": [
     { "src": "api/[...all].ts", "use": "@vercel/node" },
-    { "src": "package.json", "use": "@vercel/static-build" }
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist/client"
+      }
+    }
   ],
   "outputDirectory": "dist/client",
   "routes": [
@@ -10,5 +16,6 @@
     { "src": "/(.*)", "dest": "/api/[...all].ts" }
   ]
 }
+
 
 
