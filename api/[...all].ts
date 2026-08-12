@@ -1,11 +1,14 @@
+import type { IncomingMessage, ServerResponse } from 'http';
+
 async function getServerEntry() {
-  // Dynamically import the SSR server entry provided by TanStack React Start
-  const mod = await import('@tanstack/react-start/server-entry');
+  // Dynamically import the compiled SSR server entry
+  // @ts-ignore
+  const mod = await import('../dist/server/index.js');
   return (mod as any).default ?? (mod as any);
 }
 
-function normalizeNodeRequestToWebRequest(req: any): Request {
-  const protocol = req.headers['x-forwarded-proto'] || (req.socket?.encrypted ? 'https' : 'http');
+function normalizeNodeRequestToWebRequest(req: IncomingMessage): Request {
+  const protocol = req.headers['x-forwarded-proto'] || ((req.socket as any)?.encrypted ? 'https' : 'http');
   const host = req.headers.host || req.headers['x-forwarded-host'] || 'localhost';
   const url = `${protocol}://${host}${req.url}`;
 
@@ -26,29 +29,50 @@ function normalizeNodeRequestToWebRequest(req: any): Request {
   };
 
   if (req.method !== 'GET' && req.method !== 'HEAD') {
-    init.body = req;
+    init.body = req as any;
   }
 
   return new Request(url, init);
 }
 
-export default async function handler(req: Request) {
-  const webRequest = normalizeNodeRequestToWebRequest(req);
-  const entry = await getServerEntry();
-  if (!entry || typeof entry.fetch !== 'function') {
-    return new Response('Server entry not available', { status: 500 });
-  }
-
+export default async function handler(req: IncomingMessage, res: ServerResponse) {
   try {
+    const webRequest = normalizeNodeRequestToWebRequest(req);
+    const entry = await getServerEntry();
+    
+    if (!entry || typeof entry.fetch !== 'function') {
+      res.statusCode = 500;
+      res.end('Server entry not available');
+      return;
+    }
+
     // Call the server entry's fetch handler with the incoming Request.
-    const res = await entry.fetch(webRequest, undefined, undefined);
-    return res instanceof Response ? res : new Response(String(res));
+    const webResponse = await entry.fetch(webRequest, undefined, undefined);
+    
+    // Normalize response if it's not a standard Response object
+    const actualResponse = webResponse instanceof Response ? webResponse : new Response(String(webResponse));
+
+    // Copy status and headers to Node's ServerResponse
+    res.statusCode = actualResponse.status;
+    if (actualResponse.statusText) {
+      res.statusMessage = actualResponse.statusText;
+    }
+    
+    actualResponse.headers.forEach((value, key) => {
+      res.setHeader(key, value);
+    });
+
+    // Write body to Node's ServerResponse
+    const body = await actualResponse.arrayBuffer();
+    res.end(Buffer.from(body));
   } catch (err) {
-    // Log for debugging on Vercel
     try {
-      // eslint-disable-next-line no-console
       console.error('SSR handler error', err);
     } catch {}
-    return new Response('Internal Server Error', { status: 500 });
+    if (!res.writableEnded) {
+      res.statusCode = 500;
+      res.end('Internal Server Error');
+    }
   }
 }
+
